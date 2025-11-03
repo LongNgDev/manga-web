@@ -1,0 +1,17 @@
+name: infra-manga
+networks:
+  app_net:
+    external: true
+
+services:
+  mongo:
+    image: mongo:7
+    command: ["--bind_ip_all", "--auth"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: manga-web
+    volumes: ["/mongo/data:/data/db"]
+    networks: [app_net]
+    ports: ["27017:27017"] # DEV ONLY
+    restart: unless-stopped
