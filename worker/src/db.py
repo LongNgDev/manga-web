@@ -2,9 +2,12 @@ import os
 from pymongo import MongoClient
 
 
+
+# mongodb://admin:admin@localhost:27017/
+
 class MongoDBClient():
 
-  def __init__(self, db:str, col:str, uri:str = os.getenv("MONGO_URI", "mongodb://admin:admin@localhost:27017/")):
+  def __init__(self, col:str, db:str = "manga-web", uri:str = os.getenv("MONGO_URI", "mongodb://localhost:27017/")):
     self.client = MongoClient(uri)
     self.db = self.client.get_database(db)
     self.col = self.db.get_collection(col)
@@ -18,18 +21,21 @@ class MongoDBClient():
     except Exception as e:
       print(f"Error connecting to MongoDB: {e}")
     return
+
+  def save_raw(self, data: dict):
+    return self.col.update_one({"id": data["id"]}, {"$set": data}, upsert=True)
   
-  def save(self, data: dict):
-    return self.col.update_one({"_id": data["_id"]}, {"$set": data}, upsert=True)
-  
-  def retrieve(self, id: str):
-    return  self.col.find_one({"_id": id})
+  def retrieve(self, uid: str):
+    return  self.col.find_one({"id": uid})
   
   def retrieve_all(self):
     return  self.col.find().to_list()
   
-  def delete(self, id: str):
-    return self.col.delete_one({"_id": id})
+  def delete(self, uid: str):
+    return self.col.delete_one({"id": uid})
+  
+  def close(self):
+    return self.client.close()
     
   
 
