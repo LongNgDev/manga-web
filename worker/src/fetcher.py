@@ -64,7 +64,8 @@ class Fetcher():
     raw = requests.get(f"{self.__BASE_URL}/manga", params={
       "limit":limit,
       "availableTranslatedLanguage[]": ["vi", "en"],
-      "order[updatedAt]":"desc"
+      "order[updatedAt]":"desc",
+      "includes[]": ["manga", "cover_art", "artist" , "author", "tag", "creator"]
     })
 
     res=raw.json()
