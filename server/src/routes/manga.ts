@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { client } from "../config/database/client";
+import { client } from "../database/client";
 
 const router: Router = Router();
 
