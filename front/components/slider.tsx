@@ -30,10 +30,10 @@ export function Slider() {
 			onMouseEnter={() => autoplay.current.stop()}
 			onMouseLeave={() => autoplay.current.play()}
 		>
-			<CarouselContent className="">
+			<CarouselContent>
 				{Array.from({ length: 10 }).map((_, index) => (
 					<CarouselItem key={index}>
-						<div className="">
+						<div>
 							<Card className="rounded-none h-90">
 								<CardContent className="flex items-center justify-center w-full h-full p-6">
 									<span className="text-4xl font-semibold">{index + 1}</span>
