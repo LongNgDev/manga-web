@@ -71,25 +71,21 @@ export function Slider() {
 			{/*  */}
 			<CarouselContent>
 				{top10 &&
-					top10.slice(0, 10).map((item, index) => (
+					top10.slice(10, 20).map((item, index) => (
 						<CarouselItem key={index}>
 							<div className="relative min-h-[1000px] h-dvh">
 								<Image
 									src={`/api/cover?id=${item.id}`}
 									alt="background cover"
-									className="absolute top-0 left-0 -translate-y-1/4 brightness-35"
+									className="absolute top-0 left-0 -translate-y-1/4 -z-10 brightness-35"
 									fill
 									objectPosition="top"
 									objectFit="cover"
 									sizes="100vw"
 									preload={true}
 								/>
-								<Card className="relative h-[550px] rounded-none w-full p-10 ">
-									<CardHeader className="items-center">
-										<h2 className="text-2xl font-semibold tracking-wide">
-											No.{index + 1}
-										</h2>
-									</CardHeader>
+								<Card className="relative h-[550px] rounded-none w-full p-10 bg-linear-to-t from-0% from-background via-background/70 via-50% to-background/10 border-0">
+									<CardHeader className="items-center"></CardHeader>
 									<CardContent className="flex items-start w-full h-full gap-4">
 										<Image
 											src={`/api/cover?id=${item.id}`}
@@ -100,16 +96,18 @@ export function Slider() {
 											preload={true}
 										/>
 
-										<div className="flex flex-col justify-start h-full gap-2">
-											<div className="flex flex-col">
-												<h2 className="text-4xl font-bold">
-													{Object.values(item.attributes.title)}
-												</h2>
+										<div className="flex flex-col justify-start w-full h-full gap-2">
+											<div className="flex items-center justify-between w-ful">
+												<div className="flex flex-col">
+													<h2 className="text-4xl font-bold">
+														{Object.values(item.attributes.title)}
+													</h2>
 
-												<h2 className="text-2xl ">
-													{item.attributes.altTitles.find((t) => t.en)?.en ||
-														item.attributes.altTitles.find((t) => t.vi)?.vi}
-												</h2>
+													<h2 className="text-2xl ">
+														{item.attributes.altTitles.find((t) => t.en)?.en ||
+															item.attributes.altTitles.find((t) => t.vi)?.vi}
+													</h2>
+												</div>
 											</div>
 
 											<div className="flex gap-2">
@@ -124,11 +122,11 @@ export function Slider() {
 												))}
 											</div>
 
-											<p className="py-2">
+											<p className="w-11/12 pt-4 tracking-wide line-clamp-3">
 												{item.attributes.description.en || ""}
 											</p>
 
-											<div className="flex items-end gap-4 font-bold tracking-wide grow">
+											<div className="flex items-end gap-4 italic font-bold tracking-wide grow">
 												{item.relationships.map((item, index) => {
 													return (
 														<div key={index}>
@@ -147,6 +145,9 @@ export function Slider() {
 												})}
 											</div>
 										</div>
+										<h2 className="px-4 pt-4 text-2xl font-semibold tracking-wide text-center w-fit">
+											No.{index + 1}
+										</h2>
 									</CardContent>
 								</Card>
 							</div>
