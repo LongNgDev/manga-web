@@ -12,13 +12,28 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { Badge } from "./ui/badge";
+
+type Tags = {
+	attributes: {
+		name: Record<string, string>;
+	};
+};
 
 type MetaData = {
 	id: string;
 	attributes: {
 		title: Record<string, string>;
 		altTitles: Array<Record<string, string>>;
+		description: Record<string, string>;
+		tags: Array<Tags>;
 	};
+	relationships: Array<{
+		type: string;
+		attributes: {
+			name?: string;
+		};
+	}>;
 };
 
 export function Slider() {
@@ -51,46 +66,94 @@ export function Slider() {
 			}}
 			plugins={[autoplay.current]}
 			onMouseEnter={() => autoplay.current.stop()}
-			onMouseLeave={() => autoplay.current.play()}
+			// onMouseLeave={() => autoplay.current.play()}
 		>
+			{/*  */}
 			<CarouselContent>
 				{top10 &&
-					top10.slice(0, 11).map((item, index) => (
+					top10.slice(0, 10).map((item, index) => (
 						<CarouselItem key={index}>
-							<div className="relative h-dvh">
-								<div
-									className="absolute top-0 left-0 w-full h-full bg-no-repeat bg-cover -translate-y-1/4 brightness-40"
-									style={{
-										backgroundImage: `url(/api/cover/?id=${item.id})`,
-									}}
+							<div className="relative min-h-[1000px] h-dvh">
+								<Image
+									src={`/api/cover?id=${item.id}`}
+									alt="background cover"
+									className="absolute top-0 left-0 -translate-y-1/4 brightness-35"
+									fill
+									objectPosition="top"
+									objectFit="cover"
+									sizes="100vw"
+									preload={true}
 								/>
-								<Card className="relative h-[550px]  rounded-none w-full bg-accent/0">
-									<CardHeader>
-										<h2>No.{index + 1}</h2>
+								<Card className="relative h-[550px] rounded-none w-full p-10 ">
+									<CardHeader className="items-center">
+										<h2 className="text-2xl font-semibold tracking-wide">
+											No.{index + 1}
+										</h2>
 									</CardHeader>
-									<CardContent className="flex items-center justify-between w-full h-full p-6">
+									<CardContent className="flex items-start w-full h-full gap-4">
 										<Image
 											src={`/api/cover?id=${item.id}`}
 											alt="cover"
-											width={200}
-											height={200}
+											height={250}
+											width={250}
+											className="object-cover h-full"
+											preload={true}
 										/>
 
-										<span className="text-4xl font-semibold">
-											{Object.values(item.attributes.title)}
-										</span>
+										<div className="flex flex-col justify-start h-full gap-2">
+											<div className="flex flex-col">
+												<h2 className="text-4xl font-bold">
+													{Object.values(item.attributes.title)}
+												</h2>
 
-										<span className="text-2xl font-semibold">
-											{item.attributes.altTitles.find((t) => t.vi)?.vi ||
-												item.attributes.altTitles.find((t) => t.en)?.en}
-										</span>
+												<h2 className="text-2xl ">
+													{item.attributes.altTitles.find((t) => t.en)?.en ||
+														item.attributes.altTitles.find((t) => t.vi)?.vi}
+												</h2>
+											</div>
+
+											<div className="flex gap-2">
+												{item.attributes.tags.map((tag, index) => (
+													<Badge
+														key={index}
+														className="py-1 font-semibold tracking-wide uppercase"
+														variant={"secondary"}
+													>
+														{tag.attributes.name.en}
+													</Badge>
+												))}
+											</div>
+
+											<p className="py-2">
+												{item.attributes.description.en || ""}
+											</p>
+
+											<div className="flex items-end gap-4 font-bold tracking-wide grow">
+												{item.relationships.map((item, index) => {
+													return (
+														<div key={index}>
+															{["author", "artist"].includes(item.type) ? (
+																<h3>
+																	<span className="font-normal capitalize">
+																		{item.type}:&nbsp;
+																	</span>
+																	{item.attributes.name}
+																</h3>
+															) : (
+																<></>
+															)}
+														</div>
+													);
+												})}
+											</div>
+										</div>
 									</CardContent>
 								</Card>
 							</div>
 						</CarouselItem>
 					))}
 			</CarouselContent>
-			<div className="absolute bottom-0 flex items-center justify-end w-full gap-4 px-8">
+			<div className="absolute bottom-0 flex items-center justify-end w-full gap-4 px-10">
 				<CarouselPrevious
 					className="relative left-0 translate-none size-12"
 					variant={"ghost"}
